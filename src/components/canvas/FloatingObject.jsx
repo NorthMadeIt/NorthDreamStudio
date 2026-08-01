@@ -4,11 +4,18 @@ import React, { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 
-export default function FloatingObject({ position, rotation, scale, color, geometryType = "box" }) {
+export default function FloatingObject({
+  position,
+  rotation,
+  scale,
+  color,
+  geometryType = "box",
+  label = "Curiosity Item",
+  onHover,
+}) {
   const meshRef = useRef();
   const [hovered, setHovered] = useState(false);
 
-  // Subtle continuous rotation
   useFrame((state, delta) => {
     if (meshRef.current) {
       meshRef.current.rotation.x += delta * 0.2;
@@ -16,15 +23,26 @@ export default function FloatingObject({ position, rotation, scale, color, geome
     }
   });
 
+  const handlePointerOver = (e) => {
+    e.stopPropagation();
+    setHovered(true);
+    if (onHover) onHover(label);
+  };
+
+  const handlePointerOut = () => {
+    setHovered(false);
+    if (onHover) onHover(null);
+  };
+
   return (
     <Float speed={2} rotationIntensity={0.8} floatIntensity={1}>
       <mesh
         ref={meshRef}
         position={position}
         rotation={rotation}
-        scale={hovered ? scale * 1.1 : scale}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
+        scale={hovered ? scale * 1.15 : scale}
+        onPointerOver={handlePointerOver}
+        onPointerOut={handlePointerOut}
       >
         {geometryType === "torus" ? (
           <torusGeometry args={[1, 0.4, 16, 100]} />
