@@ -22,22 +22,15 @@ export const studioData = {
       id: 1,
       title: "Zoey Vale — Virtual Identity",
       type: "image",
-      src: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+      src: "/work/zoey.jpg",
       caption: "Hyper-realistic virtual identity development"
     },
     {
       id: 2,
-      title: "WAV App — Interface System",
-      type: "image",
-      src: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80",
+      title: "WAV App Motion Demo",
+      type: "video",
+      src: "/work/demo.mp4",
       caption: "Audio streaming & dynamic player user flow"
-    },
-    {
-      id: 3,
-      title: "ICELINK — Game Ecosystem",
-      type: "image",
-      src: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=800&q=80",
-      caption: "Interactive progression mechanics & level design"
     }
   ],
 
