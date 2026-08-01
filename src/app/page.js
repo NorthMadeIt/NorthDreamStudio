@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import DynamicScene from "@/components/canvas/Scene";
 import CentralNav from "@/components/ui/CentralNav";
+import MenuOverlay from "@/components/ui/MenuOverlay";
 import ProjectIndex from "@/components/sections/ProjectIndex";
 import { studioData } from "@/data/studio";
 
@@ -29,6 +30,12 @@ export default function Home() {
           <ProjectIndex />
         </div>
       </div>
+
+      {/* Fullscreen Inverse Menu Overlay */}
+      <MenuOverlay
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+      />
 
       {/* Persistent Center Floating Nav */}
       <CentralNav
