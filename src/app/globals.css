@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+:root {
+  /* TWOMUCH Design Tokens */
+  --color-gallery-plate: #e5e7eb;
+  --color-carbon: #000000;
+  --color-chalk: #f4f4f4;
+  --color-paper-white: #ffffff;
+  --color-concrete: #dedede;
+  --color-voltage-lime: #e2ff70;
+}
+
+body {
+  background-color: var(--color-gallery-plate);
+  color: var(--color-carbon);
+  font-weight: 500;
+  letter-spacing: -0.035em; /* Compressed negative tracking */
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hairline border utility */
+.hairline-b {
+  border-bottom: 1px solid var(--color-gallery-plate);
+}
+
+.hairline-border {
+  border: 1px solid var(--color-gallery-plate);
+}
