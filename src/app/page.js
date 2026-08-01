@@ -4,16 +4,21 @@ import React, { useState } from "react";
 import DynamicScene from "@/components/canvas/Scene";
 import CentralNav from "@/components/ui/CentralNav";
 import MenuOverlay from "@/components/ui/MenuOverlay";
+import CursorTooltip from "@/components/ui/CursorTooltip";
 import ProjectIndex from "@/components/sections/ProjectIndex";
 import { studioData } from "@/data/studio";
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [tooltipText, setTooltipText] = useState(null);
 
   return (
-    <main className="min-h-screen bg-[#e5e7eb] text-[#000000] relative pb-28 pt-12 overflow-hidden">
+    <main className="min-h-screen bg-[#e5e7eb] text-[#000000] relative pb-28 pt-12 overflow-hidden cursor-default">
+      {/* Contextual Cursor Label */}
+      <CursorTooltip label={tooltipText} visible={Boolean(tooltipText)} />
+
       {/* Interactive 3D Canvas Background */}
-      <DynamicScene />
+      <DynamicScene onHoverObject={(label) => setTooltipText(label)} />
 
       {/* Foreground UI Layer */}
       <div className="relative z-10 pointer-events-none">
