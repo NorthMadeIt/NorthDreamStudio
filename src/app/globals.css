@@ -1,31 +1,36 @@
 @import "tailwindcss";
 
 :root {
-  /* TWOMUCH Design Tokens */
   --color-gallery-plate: #e5e7eb;
   --color-carbon: #000000;
   --color-chalk: #f4f4f4;
-  --color-paper-white: #ffffff;
-  --color-concrete: #dedede;
   --color-voltage-lime: #e2ff70;
+  --color-magenta: #ff00ea;
 }
 
-body {
-  background-color: var(--color-gallery-plate);
-  color: var(--color-carbon);
-  font-weight: 500;
-  letter-spacing: -0.035em; /* Compressed negative tracking */
+body, html {
+  background-color: #f5f5f5;
+  color: #000000;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  letter-spacing: -0.04em;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
 }
 
-/* Hairline border utility */
-.hairline-b {
-  border-bottom: 1px solid var(--color-gallery-plate);
+/* Custom Visible Side Scrollbar for Expanded Menu */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 12px;
 }
 
-.hairline-border {
-  border: 1px solid var(--color-gallery-plate);
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-left: 1px solid #e5e7eb;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #ff00ea; /* Distinct Magenta Scroll Handle */
+  border-radius: 0px;  /* Sharp Square Thumb */
 }
