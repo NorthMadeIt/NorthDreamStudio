@@ -60,9 +60,10 @@ const PROJECTS = [
 const DRAWING_COLORS = ["#4a2a18", "#e2ff70", "#ff00b7", "#000000", "#ffffff"];
 
 export default function ExpandableStudioCard() {
-  // Navigation & View States
+  // Navigation, Menu & View States
   const [selectedProject, setSelectedProject] = useState(null); // null = Index View
   const [layoutMode, setLayoutMode] = useState("list"); // 'list' | 'grid' | 'single'
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Menu Toggle State
   
   // Interactive Canvas State
   const canvasRef = useRef(null);
@@ -121,20 +122,81 @@ export default function ExpandableStudioCard() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-[#ffffff] border-2 border-[#000000] rounded-none overflow-hidden font-mono text-[#000000] select-none shadow-2xl relative">
+    <div className="w-full max-w-md mx-auto bg-[#ffffff] border-2 border-[#000000] rounded-none overflow-hidden font-mono text-[#000000] select-none shadow-2xl relative min-h-[500px]">
       
       {/* GLOBAL HEADER BAR */}
       <div className="bg-[#ffffff] border-b-2 border-[#000000] p-2.5 flex justify-between items-center z-30 relative font-bold text-xs">
-        <span className="font-black text-sm uppercase tracking-tight">Twomuch.Studio</span>
+        <span 
+          onClick={() => { setSelectedProject(null); setIsMenuOpen(false); }}
+          className="font-black text-sm uppercase tracking-tight cursor-pointer"
+        >
+          Twomuch.Studio
+        </span>
         <div className="flex items-center gap-1.5">
           <span className="bg-[#4a2a18] text-[#ffffff] px-2 py-0.5 text-[11px] font-bold rounded-full flex items-center gap-1">
             <span>😶</span> 1 <span>😶</span>
           </span>
-          <button className="bg-[#e2ff70] px-3 py-1 border border-[#000000] font-black uppercase text-xs">
-            Menu •
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className={`px-3 py-1 border border-[#000000] font-black uppercase text-xs transition-colors ${
+              isMenuOpen ? "bg-[#ff00b7] text-[#ffffff]" : "bg-[#e2ff70] text-[#000000]"
+            }`}
+          >
+            {isMenuOpen ? "Close ✕" : "Menu •"}
           </button>
         </div>
       </div>
+
+      {/* FULLSCREEN NAVIGATION OVERLAY */}
+      {isMenuOpen && (
+        <div className="absolute inset-x-0 top-[49px] bottom-0 bg-[#ffffff] z-50 flex flex-col justify-between p-5 border-t-0 border-2 border-[#000000] animate-in fade-in duration-150">
+          <div className="flex flex-col gap-3 my-auto">
+            <button 
+              onClick={() => { setSelectedProject(null); setIsMenuOpen(false); }}
+              className="text-xl font-black uppercase text-left hover:text-[#ff00b7] transition-colors border-b-2 border-[#000000] pb-3 flex justify-between items-center"
+            >
+              <span>01. Selected Work</span>
+              <span className="text-xs bg-[#e2ff70] text-[#000000] px-2 py-0.5 border border-[#000000]">
+                [{PROJECTS.length}]
+              </span>
+            </button>
+            <button 
+              onClick={() => setIsMenuOpen(false)}
+              className="text-xl font-black uppercase text-left hover:text-[#ff00b7] transition-colors border-b-2 border-[#000000] pb-3 flex justify-between items-center"
+            >
+              <span>02. Collaborative Canvas</span>
+              <span className="text-xs bg-[#ff00b7] text-[#ffffff] px-2 py-0.5 border border-[#000000]">
+                LIVE
+              </span>
+            </button>
+            <button 
+              onClick={() => setIsMenuOpen(false)}
+              className="text-xl font-black uppercase text-left hover:text-[#ff00b7] transition-colors border-b-2 border-[#000000] pb-3"
+            >
+              03. Studio Profile
+            </button>
+            <button 
+              onClick={() => setIsMenuOpen(false)}
+              className="text-xl font-black uppercase text-left hover:text-[#ff00b7] transition-colors border-b-2 border-[#000000] pb-3"
+            >
+              04. Contact & Inquiries
+            </button>
+          </div>
+
+          <div className="border-t-2 border-[#000000] pt-4 space-y-2 text-xs">
+            <div className="flex justify-between items-center">
+              <span className="text-[#666666] uppercase text-[10px] font-bold">Studio Status</span>
+              <span className="bg-[#e2ff70] px-2 py-0.5 border border-[#000000] font-bold text-[10px] uppercase">
+                Available Q3/Q4
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-[#666666] uppercase text-[10px] font-bold">Location</span>
+              <span className="font-bold">London / Remote</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* VIEW 1: PROJECT DETAIL VIEW */}
       {selectedProject ? (
@@ -144,7 +206,7 @@ export default function ExpandableStudioCard() {
           <div className="flex justify-between items-center border-b border-[#333333] pb-3">
             <button
               onClick={() => setSelectedProject(null)}
-              className="bg-[#e2ff70] text-[#000000] px-3 py-1 font-black text-xs uppercase"
+              className="bg-[#e2ff70] text-[#000000] px-3 py-1 font-black text-xs uppercase border border-[#000000]"
             >
               ← All Projects
             </button>
@@ -193,7 +255,7 @@ export default function ExpandableStudioCard() {
         </div>
       ) : (
         /* VIEW 2: INDEX / HOME VIEW WITH DRAWING CANVAS & PROJECT LIST */
-        <div className="bg-[#f0f0f0] pb-12">
+        <div className="bg-[#f0f0f0] pb-16">
           
           {/* TOP SECTION: DRAWING CIRCLE WIDGET */}
           <div className="bg-[#e5e5e5] p-4 border-b-2 border-[#000000] flex flex-col items-center justify-center relative">
