@@ -1,13 +1,5 @@
 @import "tailwindcss";
 
-:root {
-  --color-gallery-plate: #e5e7eb;
-  --color-carbon: #000000;
-  --color-chalk: #f4f4f4;
-  --color-voltage-lime: #e2ff70;
-  --color-magenta: #ff00ea;
-}
-
 body, html {
   background-color: #f5f5f5;
   color: #000000;
@@ -20,17 +12,18 @@ body, html {
   width: 100vw;
 }
 
-/* Custom Visible Side Scrollbar for Expanded Menu */
+/* TWOMUCH High-Contrast Side Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 12px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background: #ffffff;
-  border-left: 1px solid #e5e7eb;
+  border-left: 1px solid #000000;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #ff00ea; /* Distinct Magenta Scroll Handle */
-  border-radius: 0px;  /* Sharp Square Thumb */
+  background: #ff00ea;
+  border-radius: 0px;
+  border: 1px solid #000000;
 }
