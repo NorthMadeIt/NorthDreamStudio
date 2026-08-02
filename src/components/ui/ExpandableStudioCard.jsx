@@ -1,370 +1,351 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
-const PRODUCTS = [
+// Project Database
+const PROJECTS = [
   {
-    id: "dogs-tee",
-    title: "Dogs Tee",
-    price: "45.00",
-    currency: "GBP",
-    sizes: ["S", "M", "L", "XL"],
+    id: "pp-model",
+    title: "PP Model",
+    client: "Pangram Pangram",
+    year: "2025",
+    tags: ["Typeface", "Motion", "3D Render"],
+    description:
+      "Visuals and campaign created for Pangram Pangram for their new typeface launch PP Model. We created motion assets and still imagery representing the process of creating a model car based on Tamiya car models.",
+    credits: "Inari Type, Mathieu Desjardins, Francesca Bolognini",
+    color: "#1a1a1a",
   },
   {
-    id: "5yr-hoodie",
-    title: "5yr Hoodie",
-    price: "80.00",
-    currency: "GBP",
-    sizes: ["XS", "S", "M", "L"],
+    id: "50-50",
+    title: "50-50",
+    client: "Independent",
+    year: "2025",
+    tags: ["Identity", "Digital"],
+    description: "Interactive brand experiment exploring dualistic balance in web aesthetics.",
+    credits: "NorthDreamStudio",
+    color: "#ff007a",
   },
   {
-    id: "aftrshift-cap",
-    title: "Aftrshift Cap",
-    price: "30.00",
-    currency: "GBP",
-    sizes: ["ONE SIZE"],
+    id: "toyota",
+    title: "Toyota e-collection",
+    client: "Toyota",
+    year: "2024",
+    tags: ["3D Concept", "Automotive"],
+    description: "Digital asset collection designed for Toyota EV global concept launch.",
+    credits: "Studio Nari Collaboration",
+    color: "#222222",
+  },
+  {
+    id: "daisy-chain",
+    title: "Daisy Chain",
+    client: "Ecosystem",
+    year: "2024",
+    tags: ["Web3", "UI/UX"],
+    description: "Connected asset network UI layout and interactive reward mechanics.",
+    credits: "NorthDreamStudio",
+    color: "#e2ff70",
+  },
+  {
+    id: "studio-nari",
+    title: "Studio Nari",
+    client: "Nari",
+    year: "2024",
+    tags: ["Portfolio", "Web Arch"],
+    description: "Headless portfolio web application and dynamic asset archive.",
+    credits: "Twomuch.Studio x Nari",
+    color: "#111111",
   },
 ];
 
+const DRAWING_COLORS = ["#4a2a18", "#e2ff70", "#ff00b7", "#000000", "#ffffff"];
+
 export default function ExpandableStudioCard() {
-  // Navigation View State: 'menu' | 'shop' | 'works' | 'info'
-  const [currentView, setCurrentView] = useState("menu");
+  // Navigation & View States
+  const [selectedProject, setSelectedProject] = useState(null); // null = Index View
+  const [layoutMode, setLayoutMode] = useState("list"); // 'list' | 'grid' | 'single'
+  
+  // Interactive Canvas State
+  const canvasRef = useRef(null);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [selectedColor, setSelectedColor] = useState("#ff00b7");
+  const [drawingCount, setDrawingCount] = useState(6913);
 
-  // Shop States
-  const scrollRef = useRef(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [selectedSize, setSelectedSize] = useState("M");
-  const [cart, setCart] = useState([]);
-  const [showCartDrawer, setShowCartDrawer] = useState(false);
-  const [pulsingId, setPulsingId] = useState(null);
+  // Initialize Canvas Drawing Context
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    ctx.lineWidth = 4;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+  }, []);
 
-  // Rack Scroll Handler
-  const handleScroll = (direction) => {
-    if (scrollRef.current) {
-      const scrollAmount = direction === "left" ? -260 : 260;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
+  // Canvas Handlers
+  const startDrawing = (e) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    ctx.strokeStyle = selectedColor;
+    ctx.beginPath();
+    ctx.moveTo(clientX - rect.left, clientY - rect.top);
+    setIsDrawing(true);
   };
 
-  // Product Tap Pulse
-  const handleProductClick = (product) => {
-    setPulsingId(product.id);
-    setTimeout(() => setPulsingId(null), 180);
-    setSelectedProduct(product);
+  const draw = (e) => {
+    if (!isDrawing) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    ctx.lineTo(clientX - rect.left, clientY - rect.top);
+    ctx.stroke();
   };
 
-  // Cart Handlers
-  const addToCart = () => {
-    if (!selectedProduct) return;
-    const item = {
-      ...selectedProduct,
-      size: selectedSize,
-      cartId: `${selectedProduct.id}-${selectedSize}-${Date.now()}`,
-    };
-    setCart((prev) => [...prev, item]);
-    setSelectedProduct(null);
+  const stopDrawing = () => {
+    setIsDrawing(false);
   };
 
-  const handleShopifyCheckout = () => {
-    window.open("https://twomuch-supplies.myshopify.com", "_blank");
+  const handlePushDrawing = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    setDrawingCount((prev) => prev + 1);
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-[#ffffff] border-2 border-[#000000] rounded-none overflow-hidden font-mono text-[#000000] select-none shadow-2xl">
+    <div className="w-full max-w-md mx-auto bg-[#ffffff] border-2 border-[#000000] rounded-none overflow-hidden font-mono text-[#000000] select-none shadow-2xl relative">
       
       {/* GLOBAL HEADER BAR */}
-      <div className="bg-[#ffffff] border-b-2 border-[#000000] p-3 flex justify-between items-center rounded-none font-bold text-xs">
-        {currentView === "menu" ? (
-          <>
-            <span className="uppercase tracking-widest font-black text-sm">NorthDreamStudio</span>
-            <span className="bg-[#e2ff70] px-2 py-0.5 border border-[#000000] text-[10px] rounded-none uppercase">
-              Online
-            </span>
-          </>
-        ) : (
-          <button
-            onClick={() => {
-              setCurrentView("menu");
-              setSelectedProduct(null);
-              setShowCartDrawer(false);
-            }}
-            className="w-full bg-[#000000] text-[#ffffff] py-1.5 px-3 font-mono text-xs font-bold uppercase rounded-none flex items-center justify-between active:bg-[#222222]"
-          >
-            <span>← Back To Menu</span>
-            <span className="text-[10px] text-[#e2ff70]">[ {currentView.toUpperCase()} ]</span>
+      <div className="bg-[#ffffff] border-b-2 border-[#000000] p-2.5 flex justify-between items-center z-30 relative font-bold text-xs">
+        <span className="font-black text-sm uppercase tracking-tight">Twomuch.Studio</span>
+        <div className="flex items-center gap-1.5">
+          <span className="bg-[#4a2a18] text-[#ffffff] px-2 py-0.5 text-[11px] font-bold rounded-full flex items-center gap-1">
+            <span>😶</span> 1 <span>😶</span>
+          </span>
+          <button className="bg-[#e2ff70] px-3 py-1 border border-[#000000] font-black uppercase text-xs">
+            Menu •
           </button>
-        )}
+        </div>
       </div>
 
-      {/* VIEW 1: MAIN MENU GRID */}
-      {currentView === "menu" && (
-        <div className="p-3 space-y-3 bg-[#f2f2f2]">
-          {/* Top Banner */}
-          <div className="bg-[#ffffff] border-2 border-[#000000] p-3 rounded-none">
-            <p className="text-[11px] leading-tight font-medium uppercase">
-              Digital Visual Identity & Sound Architecture Studio.
-            </p>
-          </div>
-
-          {/* Interactive Menu Grid */}
-          <div className="grid grid-cols-2 gap-2">
-            
-            {/* SHOP TILE */}
-            <div
-              onClick={() => setCurrentView("shop")}
-              className="bg-[#e2ff70] border-2 border-[#000000] p-4 flex flex-col justify-between cursor-pointer hover:brightness-95 active:scale-[0.98] transition-all rounded-none min-h-[120px]"
-            >
-              <div className="flex justify-between items-start">
-                <span className="text-xl">🛒</span>
-                <span className="text-[10px] bg-[#000000] text-[#ffffff] px-1.5 py-0.5 font-bold">
-                  STORE
-                </span>
-              </div>
-              <div>
-                <span className="font-black text-xs uppercase tracking-tight block">Shop</span>
-                <span className="text-[10px] opacity-80 uppercase">Apparel & Assets</span>
-              </div>
-            </div>
-
-            {/* WORKS TILE */}
-            <div
-              onClick={() => setCurrentView("works")}
-              className="bg-[#ffffff] border-2 border-[#000000] p-4 flex flex-col justify-between cursor-pointer hover:bg-[#f8f8f8] active:scale-[0.98] transition-all rounded-none min-h-[120px]"
-            >
-              <div className="flex justify-between items-start">
-                <span className="text-xl">⚡</span>
-                <span className="text-[10px] border border-[#000000] px-1.5 py-0.5 font-bold">
-                  03
-                </span>
-              </div>
-              <div>
-                <span className="font-black text-xs uppercase tracking-tight block">Works</span>
-                <span className="text-[10px] opacity-60 uppercase">Selected Projects</span>
-              </div>
-            </div>
-
-            {/* INFO TILE */}
-            <div
-              onClick={() => setCurrentView("info")}
-              className="bg-[#ffffff] border-2 border-[#000000] p-4 flex flex-col justify-between cursor-pointer hover:bg-[#f8f8f8] active:scale-[0.98] transition-all rounded-none min-h-[120px]"
-            >
-              <div className="flex justify-between items-start">
-                <span className="text-xl">📁</span>
-              </div>
-              <div>
-                <span className="font-black text-xs uppercase tracking-tight block">Info</span>
-                <span className="text-[10px] opacity-60 uppercase">About & Specs</span>
-              </div>
-            </div>
-
-            {/* LINKS TILE */}
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noreferrer"
-              className="bg-[#000000] text-[#ffffff] border-2 border-[#000000] p-4 flex flex-col justify-between cursor-pointer active:scale-[0.98] transition-all rounded-none min-h-[120px]"
-            >
-              <div className="flex justify-between items-start">
-                <span className="text-xl">↗</span>
-              </div>
-              <div>
-                <span className="font-black text-xs uppercase tracking-tight block text-[#e2ff70]">
-                  Social
-                </span>
-                <span className="text-[10px] opacity-80 uppercase">Connect</span>
-              </div>
-            </a>
-
-          </div>
-        </div>
-      )}
-
-      {/* VIEW 2: HEADLESS RACK SHOP */}
-      {currentView === "shop" && (
-        <div className="relative w-full h-[75vh] bg-[#f2f2f2] flex flex-col justify-between overflow-hidden rounded-none">
+      {/* VIEW 1: PROJECT DETAIL VIEW */}
+      {selectedProject ? (
+        <div className="bg-[#111111] text-[#ffffff] min-h-[80vh] flex flex-col justify-between p-4 space-y-6">
           
-          {/* Sub Header */}
-          <div className="bg-[#ffffff] border-b-2 border-[#000000] p-2 flex justify-between items-center z-10 text-[11px] font-bold">
-            <span className="uppercase">Rack View</span>
-            <span className="bg-[#e2ff70] px-2 py-0.5 border border-[#000000] rounded-none">
-              11,305 Views
-            </span>
+          {/* Top Sticky Nav */}
+          <div className="flex justify-between items-center border-b border-[#333333] pb-3">
+            <button
+              onClick={() => setSelectedProject(null)}
+              className="bg-[#e2ff70] text-[#000000] px-3 py-1 font-black text-xs uppercase"
+            >
+              ← All Projects
+            </button>
+            <span className="text-xs text-[#888888] font-bold">{selectedProject.year}</span>
           </div>
 
-          {/* Main Shop Canvas */}
-          {selectedProduct ? (
-            /* PRODUCT DETAIL MODAL */
-            <div className="relative flex-1 bg-[#ffffff] flex flex-col justify-between p-3 z-10 overflow-hidden rounded-none">
-              <div className="flex-1 flex items-center justify-center relative my-2">
-                <div className="w-full h-full max-h-[45vh] bg-[#e5e5e5] border-2 border-[#000000] flex items-center justify-center font-mono text-xs uppercase rounded-none">
-                  [ {selectedProduct.title} Close-up ]
-                </div>
+          {/* Project Header Info */}
+          <div className="space-y-4">
+            <h1 className="text-2xl font-black uppercase leading-tight tracking-wide">
+              {selectedProject.title}
+            </h1>
+            <p className="text-xs leading-relaxed text-[#cccccc] font-sans">
+              {selectedProject.description}
+            </p>
+
+            {/* Metadata Grid */}
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#222222] text-[11px]">
+              <div>
+                <span className="text-[#666666] block uppercase text-[9px] font-bold">Client</span>
+                <span className="font-bold">{selectedProject.client}</span>
               </div>
-
-              {/* Sticky Controls */}
-              <div className="bg-[#ffffff] border-2 border-[#000000] p-2.5 space-y-2 z-20 rounded-none">
-                <div className="flex justify-between items-center text-xs font-black">
-                  <span>{selectedProduct.title}</span>
-                  <span>{selectedProduct.price} {selectedProduct.currency}</span>
-                  <button
-                    onClick={() => setSelectedProduct(null)}
-                    className="bg-[#e2ff70] border border-[#000000] px-2 py-0.5 text-[10px] font-bold uppercase rounded-none"
-                  >
-                    Close
-                  </button>
-                </div>
-
-                {/* Size Grid */}
-                <div className="flex gap-1">
-                  {selectedProduct.sizes.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`flex-1 py-1.5 text-xs font-bold border border-[#000000] rounded-none ${
-                        selectedSize === size ? "bg-[#e2ff70]" : "bg-[#ffffff]"
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                  <button
-                    onClick={addToCart}
-                    className="bg-[#e2ff70] border border-[#000000] px-4 font-black text-xs rounded-none active:bg-[#cbf230]"
-                  >
-                    +
-                  </button>
-                </div>
+              <div>
+                <span className="text-[#666666] block uppercase text-[9px] font-bold">Credits</span>
+                <span className="font-bold text-[#aaaaaa]">{selectedProject.credits}</span>
               </div>
             </div>
-          ) : (
-            /* HORIZONTAL RACK TRACK */
-            <div className="relative flex-1 flex items-center overflow-hidden">
-              <button
-                onClick={() => handleScroll("left")}
-                className="absolute left-2 z-20 bg-[#e2ff70] border-2 border-[#000000] p-2 font-black text-xs rounded-none active:scale-90"
-              >
-                ←
-              </button>
-              <button
-                onClick={() => handleScroll("right")}
-                className="absolute right-2 z-20 bg-[#e2ff70] border-2 border-[#000000] p-2 font-black text-xs rounded-none active:scale-90"
-              >
-                →
-              </button>
+          </div>
 
-              <div
-                ref={scrollRef}
-                className="w-full h-full flex items-center gap-5 overflow-x-auto px-10 scrollbar-none snap-x snap-mandatory"
-                style={{ scrollbarWidth: "none" }}
-              >
-                {PRODUCTS.map((product) => (
-                  <div
-                    key={product.id}
-                    onClick={() => handleProductClick(product)}
-                    className={`shrink-0 w-[200px] h-[310px] bg-[#ffffff] border-2 border-[#000000] p-3 flex flex-col justify-between cursor-pointer snap-center transition-all rounded-none ${
-                      pulsingId === product.id ? "scale-95 bg-[#f0f0f0]" : "hover:scale-[1.01]"
+          {/* Media Asset Stack Mockup */}
+          <div className="space-y-3 pt-4">
+            <div className="w-full h-52 bg-[#222222] border border-[#333333] flex items-center justify-center text-xs font-mono text-[#666666]">
+              [ {selectedProject.title} Asset Showcase 01 ]
+            </div>
+            <div className="w-full h-52 bg-[#1a1a1a] border border-[#333333] flex items-center justify-center text-xs font-mono text-[#666666]">
+              [ {selectedProject.title} Asset Showcase 02 ]
+            </div>
+          </div>
+
+          {/* Sticky Drawer Trigger */}
+          <button
+            onClick={() => setSelectedProject(null)}
+            className="w-full bg-[#e2ff70] text-[#000000] py-2.5 font-black text-xs uppercase border-2 border-[#000000] sticky bottom-0"
+          >
+            More projects
+          </button>
+        </div>
+      ) : (
+        /* VIEW 2: INDEX / HOME VIEW WITH DRAWING CANVAS & PROJECT LIST */
+        <div className="bg-[#f0f0f0] pb-12">
+          
+          {/* TOP SECTION: DRAWING CIRCLE WIDGET */}
+          <div className="bg-[#e5e5e5] p-4 border-b-2 border-[#000000] flex flex-col items-center justify-center relative">
+            <div className="relative w-64 h-64 bg-[#ffffff] rounded-full border-2 border-[#000000] overflow-hidden shadow-inner cursor-crosshair">
+              <canvas
+                ref={canvasRef}
+                width={256}
+                height={256}
+                onMouseDown={startDrawing}
+                onMouseMove={draw}
+                onMouseUp={stopDrawing}
+                onMouseLeave={stopDrawing}
+                onTouchStart={startDrawing}
+                onTouchMove={draw}
+                onTouchEnd={stopDrawing}
+                className="w-full h-full touch-none"
+              />
+
+              {/* Color Swatches Overlay */}
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-[#ffffff]/90 backdrop-blur border border-[#000000] p-1 flex gap-1.5 rounded-full z-10">
+                {DRAWING_COLORS.map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => setSelectedColor(color)}
+                    style={{ backgroundColor: color }}
+                    className={`w-5 h-5 rounded-full border border-[#000000] transition-transform ${
+                      selectedColor === color ? "scale-125 ring-2 ring-[#000000]" : ""
                     }`}
+                  />
+                ))}
+              </div>
+
+              {/* Push Drawing Button (+) */}
+              <button
+                onClick={handlePushDrawing}
+                className="absolute bottom-3 left-3 bg-[#ffffff] border-2 border-[#000000] w-8 h-8 rounded-full font-black text-lg flex items-center justify-center hover:bg-[#e2ff70] active:scale-90 transition-all z-10"
+              >
+                +
+              </button>
+            </div>
+
+            {/* Submissions Badge Bar */}
+            <div className="w-full bg-[#ff00b7] text-[#ffffff] mt-3 py-1.5 px-3 border border-[#000000] flex justify-between items-center text-xs font-black">
+              <span>View all</span>
+              <span>{drawingCount} drawings</span>
+            </div>
+          </div>
+
+          {/* SECTION HEADER */}
+          <div className="p-2.5 bg-[#ffffff] border-b-2 border-[#000000] flex justify-between items-center font-black text-xs">
+            <span className="uppercase tracking-widest">WORK</span>
+            <span className="text-sm">↓</span>
+          </div>
+
+          {/* PROJECT LISTINGS - DYNAMIC BASED ON LAYOUT MODE */}
+          <div className="p-2">
+            
+            {/* 1. LIST VIEW MODE (☰) */}
+            {layoutMode === "list" && (
+              <div className="divide-y divide-[#e0e0e0] border border-[#000000] bg-[#ffffff]">
+                {PROJECTS.map((project) => (
+                  <div
+                    key={project.id}
+                    onClick={() => setSelectedProject(project)}
+                    className="flex items-center gap-3 p-2 hover:bg-[#e2ff70] cursor-pointer transition-colors"
                   >
-                    <div className="w-full h-1.5 bg-[#000000] mb-2 rounded-none" />
-                    <div className="flex-1 bg-[#f5f5f5] border border-dashed border-[#888888] flex items-center justify-center text-[11px] uppercase rounded-none">
-                      [ {product.title} ]
-                    </div>
-                    <div className="mt-2 pt-2 border-t-2 border-[#000000] flex justify-between items-center text-xs font-black">
-                      <span>{product.title}</span>
-                      <span className="bg-[#e2ff70] px-2 py-0.5 border border-[#000000] rounded-none">
-                        Buy
-                      </span>
+                    <div
+                      className="w-10 h-10 border border-[#000000] shrink-0 bg-[#cccccc]"
+                      style={{ backgroundColor: project.color }}
+                    />
+                    <span className="font-bold text-xs uppercase tracking-tight flex-1">
+                      {project.title}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* 2. GRID VIEW MODE (::) */}
+            {layoutMode === "grid" && (
+              <div className="grid grid-cols-2 gap-2">
+                {PROJECTS.map((project) => (
+                  <div
+                    key={project.id}
+                    onClick={() => setSelectedProject(project)}
+                    className="relative bg-[#ffffff] border-2 border-[#000000] h-36 p-2 flex flex-col justify-between cursor-pointer hover:border-[#ff00b7] transition-all overflow-hidden"
+                  >
+                    <div
+                      className="absolute inset-0 opacity-20"
+                      style={{ backgroundColor: project.color }}
+                    />
+                    <span className="relative z-10 bg-[#ffffff] border border-[#000000] px-2 py-0.5 text-[10px] font-black uppercase w-max">
+                      {project.title}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* 3. SINGLE FEED VIEW MODE (=) */}
+            {layoutMode === "single" && (
+              <div className="space-y-3">
+                {PROJECTS.map((project) => (
+                  <div
+                    key={project.id}
+                    onClick={() => setSelectedProject(project)}
+                    className="bg-[#ffffff] border-2 border-[#000000] p-2 space-y-2 cursor-pointer hover:brightness-95"
+                  >
+                    <span className="bg-[#ffffff] border border-[#000000] px-2 py-0.5 text-xs font-black uppercase inline-block">
+                      {project.title}
+                    </span>
+                    <div
+                      className="w-full h-44 border border-[#000000] flex items-center justify-center font-mono text-xs text-[#ffffff]"
+                      style={{ backgroundColor: project.color }}
+                    >
+                      [ {project.title} Preview Image ]
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Cart Drawer */}
-          {showCartDrawer && (
-            <div className="absolute inset-0 z-30 bg-[#000000]/70 flex items-end p-2 rounded-none">
-              <div className="w-full bg-[#ffffff] border-2 border-[#000000] p-3 space-y-3 rounded-none">
-                <div className="flex justify-between items-center border-b-2 border-[#000000] pb-2 font-black text-xs uppercase">
-                  <span>Bag ({cart.length})</span>
-                  <button
-                    onClick={() => setShowCartDrawer(false)}
-                    className="bg-[#000000] text-[#ffffff] px-2 py-0.5 text-xs font-bold rounded-none"
-                  >
-                    ✕
-                  </button>
-                </div>
+          </div>
 
-                <div className="max-h-32 overflow-y-auto space-y-1.5 divide-y divide-[#e5e5e5]">
-                  {cart.length === 0 ? (
-                    <p className="text-xs text-[#777777] py-2">Your bag is empty.</p>
-                  ) : (
-                    cart.map((item) => (
-                      <div key={item.cartId} className="pt-1 flex justify-between text-xs font-bold">
-                        <span>{item.title} ({item.size})</span>
-                        <span>{item.price} {item.currency}</span>
-                      </div>
-                    ))
-                  )}
-                </div>
-
-                {cart.length > 0 && (
-                  <button
-                    onClick={handleShopifyCheckout}
-                    className="w-full bg-[#e2ff70] border-2 border-[#000000] py-2 font-black text-xs uppercase rounded-none active:scale-[0.99]"
-                  >
-                    Checkout
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Bottom Bar */}
-          <div className="bg-[#ffffff] border-t-2 border-[#000000] p-2 flex justify-between items-center z-20 text-xs font-bold rounded-none">
-            <span className="bg-[#e2ff70] px-2 py-0.5 border border-[#000000] rounded-none uppercase text-[10px]">
-              Products
-            </span>
+          {/* FLOATING BOTTOM CONTROL BAR */}
+          <div className="fixed bottom-3 right-3 bg-[#ffffff] border-2 border-[#000000] flex items-center z-40 shadow-xl">
             <button
-              onClick={() => setShowCartDrawer(!showCartDrawer)}
-              className="flex items-center gap-2 bg-[#ffffff] border border-[#000000] px-2.5 py-0.5 rounded-none"
+              onClick={() => setLayoutMode("list")}
+              className={`p-2 px-3 border-r border-[#000000] text-xs font-black ${
+                layoutMode === "list" ? "bg-[#e2ff70]" : "bg-[#ffffff]"
+              }`}
             >
-              <span>{String(cart.length).padStart(2, "0")}</span>
-              <span>🛒</span>
+              ☰
+            </button>
+            <button
+              onClick={() => setLayoutMode("grid")}
+              className={`p-2 px-3 border-r border-[#000000] text-xs font-black ${
+                layoutMode === "grid" ? "bg-[#e2ff70]" : "bg-[#ffffff]"
+              }`}
+            >
+              ::
+            </button>
+            <button
+              onClick={() => setLayoutMode("single")}
+              className={`p-2 px-3 text-xs font-black ${
+                layoutMode === "single" ? "bg-[#e2ff70]" : "bg-[#ffffff]"
+              }`}
+            >
+              =
             </button>
           </div>
 
-        </div>
-      )}
-
-      {/* VIEW 3: WORKS PLACEHOLDER */}
-      {currentView === "works" && (
-        <div className="p-4 space-y-3 bg-[#f2f2f2] min-h-[50vh]">
-          <h3 className="font-black text-xs uppercase border-b-2 border-[#000000] pb-1">
-            Selected Works
-          </h3>
-          <div className="space-y-2">
-            {["WAV App Layout", "Zoey Vale Identity", "3D Floating Gallery"].map((work, i) => (
-              <div key={i} className="bg-[#ffffff] border-2 border-[#000000] p-3 flex justify-between items-center rounded-none text-xs font-bold">
-                <span>{work}</span>
-                <span className="text-[10px] bg-[#e2ff70] border border-[#000000] px-1.5 py-0.5">
-                  2026
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* VIEW 4: INFO PLACEHOLDER */}
-      {currentView === "info" && (
-        <div className="p-4 space-y-3 bg-[#ffffff] min-h-[50vh]">
-          <h3 className="font-black text-xs uppercase border-b-2 border-[#000000] pb-1">
-            Studio Information
-          </h3>
-          <p className="text-xs leading-relaxed">
-            NorthDreamStudio operates across web architecture, brand identity design, and customized headless digital storefronts.
-          </p>
         </div>
       )}
 
