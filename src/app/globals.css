@@ -12,9 +12,9 @@ body, html {
   width: 100vw;
 }
 
-/* TWOMUCH High-Contrast Side Scrollbar */
+/* Custom Magenta Scrollbar for TWOMUCH Aesthetics */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 12px;
+  width: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
