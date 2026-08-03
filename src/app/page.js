@@ -11,7 +11,7 @@ export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <main className="relative min-h-screen bg-[#f5f5f5]">
+    <main className="relative min-h-screen bg-[#e5e7eb]">
       {/* Hero: full-viewport touch-reactive 3D field */}
       <section className="relative h-screen w-full overflow-hidden">
         <Scene />
@@ -28,7 +28,7 @@ export default function HomePage() {
       </section>
 
       {/* Content flow below the hero */}
-      <div className="relative z-10 bg-[#f5f5f5]">
+      <div className="relative z-10 bg-[#e5e7eb]">
         <ProjectIndex />
         <StudioFooter />
       </div>
