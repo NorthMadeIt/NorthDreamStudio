@@ -44,12 +44,22 @@ export default function MenuOverlay({ isOpen, onClose }) {
           </a>
 
           <a
+            href="/draw"
+            className="group flex items-center gap-4 text-[#ffffff] hover:text-[#e2ff70] transition-colors duration-150 w-fit"
+          >
+            <span className="text-xs font-mono text-[#ffffff]/40 group-hover:text-[#e2ff70]">
+              [02]
+            </span>
+            <span>Draw</span>
+          </a>
+
+          <a
             href="#about"
             onClick={onClose}
             className="group flex items-center gap-4 text-[#ffffff] hover:text-[#e2ff70] transition-colors duration-150 w-fit"
           >
             <span className="text-xs font-mono text-[#ffffff]/40 group-hover:text-[#e2ff70]">
-              [02]
+              [03]
             </span>
             <span>Studio Bio</span>
           </a>
@@ -60,7 +70,7 @@ export default function MenuOverlay({ isOpen, onClose }) {
             className="group flex items-center gap-4 text-[#ffffff] hover:text-[#e2ff70] transition-colors duration-150 w-fit"
           >
             <span className="text-xs font-mono text-[#ffffff]/40 group-hover:text-[#e2ff70]">
-              [03]
+              [04]
             </span>
             <span>Direct Inquiries</span>
           </a>
