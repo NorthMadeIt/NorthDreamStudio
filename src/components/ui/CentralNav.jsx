@@ -37,4 +37,4 @@ export default function CentralNav({ toggleMenu, isMenuOpen, onlineCount = 1 }) 
       </button>
     </nav>
   );
-}
+} 
