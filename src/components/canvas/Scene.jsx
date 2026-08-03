@@ -1,19 +1,39 @@
 "use client";
 
-import React, { Suspense, useRef, useMemo } from "react";
+import React, { Suspense, useRef, useMemo, Component } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
 
+// Catches a bad/missing image so ONE broken file can't crash the whole page.
+class ImageErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error) {
+    console.warn(`[Scene] Failed to load "${this.props.url}" — skipping it.`, error);
+  }
+  render() {
+    if (this.state.hasError) return null;
+    return this.props.children;
+  }
+}
+
 // --- Drop your background-removed PNGs into /public/images and list them here.
 // baseSize = height in world units before aspect-ratio correction (width is derived from the image itself).
 const IMAGES = [
-  { id: "img-1", url: "/images/object-01.png", position: [-2.3, 1.2, -0.3], baseSize: 1.4, drift: [0.35, 0.22, 0] },
-  { id: "img-2", url: "/images/object-02.png", position: [2.2, 0.8, -0.7], baseSize: 1.1, drift: [-0.3, 0.28, 0] },
-  { id: "img-3", url: "/images/object-03.png", position: [-1.7, -1.3, -0.2], baseSize: 1.3, drift: [0.26, -0.24, 0] },
-  { id: "img-4", url: "/images/object-04.png", position: [2.1, -1.1, -0.6], baseSize: 1.0, drift: [-0.32, -0.2, 0] },
-  { id: "img-5", url: "/images/object-05.png", position: [0.2, 1.7, -1], baseSize: 1.2, drift: [0.18, -0.3, 0] },
-  { id: "img-6", url: "/images/object-06.png", position: [-0.3, -1.8, -1.1], baseSize: 0.9, drift: [-0.22, 0.26, 0] },
+  { id: "logo", url: "/images/object-01-logo.png", position: [-1.6, 1.6, -0.9], baseSize: 0.9, drift: [0.22, 0.16, 0] },
+  { id: "madebynorth", url: "/images/object-02-madebynorth.png", position: [1.9, 1.4, -0.4], baseSize: 1.15, drift: [-0.28, 0.2, 0] },
+  { id: "globe", url: "/images/object-03-globe.png", position: [-2.4, -0.3, -0.6], baseSize: 0.85, drift: [0.3, -0.24, 0] },
+  { id: "alien", url: "/images/object-04-alien.png", position: [2.3, -0.4, -1], baseSize: 0.95, drift: [-0.24, -0.28, 0] },
+  { id: "gummybears", url: "/images/object-05-gummybears.png", position: [0, -1.7, -0.3], baseSize: 1.1, drift: [0.2, 0.26, 0] },
+  { id: "graffiti", url: "/images/object-06-graffiti.png", position: [-0.6, 0.4, -1.3], baseSize: 1.2, drift: [-0.18, 0.22, 0] },
+  { id: "stopsign", url: "/images/object-07-stopsign.png", position: [0.9, -1.9, -0.7], baseSize: 0.95, drift: [0.26, -0.18, 0] },
+  { id: "tshirt", url: "/images/object-08-tshirt.png", position: [-2.6, 1.9, -1.2], baseSize: 1.3, drift: [0.24, 0.2, 0] },
 ];
 
 const BOUNDS = { x: 3.4, y: 2.1 };
@@ -131,7 +151,11 @@ function SceneContents() {
     <>
       <ambientLight intensity={1.8} />
       {images.map((img) => (
-        <FloatingImage key={img.id} {...img} pointerRef={pointerRef} />
+        <ImageErrorBoundary key={img.id} url={img.url}>
+          <Suspense fallback={null}>
+            <FloatingImage {...img} pointerRef={pointerRef} />
+          </Suspense>
+        </ImageErrorBoundary>
       ))}
     </>
   );
