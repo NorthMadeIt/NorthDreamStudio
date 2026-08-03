@@ -1,27 +1,44 @@
 "use client";
 
-import React from "react";
+import { useState } from "react";
 import Scene from "@/components/canvas/Scene";
-import ExpandableStudioCard from "@/components/ui/ExpandableStudioCard";
-import { studioData } from "@/data/studio";
+import CentralNav from "@/components/ui/CentralNav";
+import MenuOverlay from "@/components/ui/MenuOverlay";
+import ProjectIndex from "@/components/sections/ProjectIndex";
+import StudioFooter from "@/components/sections/StudioFooter";
 
-export default function Home() {
+export default function HomePage() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
-    <main className="h-screen w-screen bg-[#f5f5f5] relative overflow-hidden select-none">
-      
-      {/* Background Watermark Logo (Flashing/Static as seen in Screenshot 1) */}
-      <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-0">
-        <h1 className="text-[12vw] font-black tracking-tighter uppercase text-[#000000]/[0.04] whitespace-nowrap select-none">
-          {studioData.name}
-        </h1>
+    <main className="relative min-h-screen bg-[#f5f5f5]">
+      {/* Hero: full-viewport touch-reactive 3D field */}
+      <section className="relative h-screen w-full overflow-hidden">
+        <Scene />
+
+        <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center pointer-events-none">
+          <h1 className="text-4xl sm:text-6xl font-black uppercase tracking-tighter text-[#000000]">
+            NorthDreamStudio
+          </h1>
+          <p className="mt-3 max-w-sm text-sm text-[#000000]/60">
+            A creative technology studio building hyper-realistic virtual
+            identities and interactive digital ecosystems.
+          </p>
+        </div>
+      </section>
+
+      {/* Content flow below the hero */}
+      <div className="relative z-10 bg-[#f5f5f5]">
+        <ProjectIndex />
+        <StudioFooter />
       </div>
 
-      {/* Interactive 3D Canvas */}
-      <Scene />
-
-      {/* Central Expandable Pill / Studio Card */}
-      <ExpandableStudioCard />
-
+      {/* Persistent shell */}
+      <CentralNav
+        toggleMenu={() => setIsMenuOpen((open) => !open)}
+        isMenuOpen={isMenuOpen}
+      />
+      <MenuOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </main>
   );
 }
