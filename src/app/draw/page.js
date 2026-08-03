@@ -1,0 +1,21 @@
+import DrawCanvas from "@/components/sections/DrawCanvas";
+import CentralNavLink from "@/components/ui/CentralNavLink";
+
+export default function DrawPage() {
+  return (
+    <main className="min-h-screen bg-[#e5e7eb] flex flex-col items-center justify-center px-6 py-24">
+      <div className="text-center mb-10">
+        <h1 className="text-3xl sm:text-4xl font-black uppercase tracking-tighter text-[#000000]">
+          Community Canvas
+        </h1>
+        <p className="mt-2 text-sm text-[#000000]/60 max-w-xs mx-auto">
+          Leave a mark. Every drawing joins the collective wall.
+        </p>
+      </div>
+
+      <DrawCanvas />
+
+      <CentralNavLink />
+    </main>
+  );
+}
