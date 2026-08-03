@@ -16,7 +16,7 @@ export default function MenuOverlay({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 bg-[#000000] text-[#ffffff] flex flex-col justify-between p-6 sm:p-12 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-40 bg-[#000000] text-[#ffffff] flex flex-col justify-between p-6 sm:p-12 pb-28 sm:pb-32 overflow-y-auto animate-in fade-in duration-200">
       {/* Top Header inside Overlay */}
       <div className="flex justify-between items-center pb-6 border-b border-[#e5e7eb]/20">
         <span className="text-xs font-mono tracking-wider opacity-60 uppercase">
