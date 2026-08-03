@@ -26,17 +26,17 @@ class ImageErrorBoundary extends Component {
 // --- Drop your background-removed PNGs into /public/images and list them here.
 // baseSize = height in world units before aspect-ratio correction (width is derived from the image itself).
 const IMAGES = [
-  { id: "logo", url: "/images/object-01-logo.png", position: [-1.6, 1.6, -0.9], baseSize: 0.9, drift: [0.22, 0.16, 0] },
-  { id: "madebynorth", url: "/images/object-02-madebynorth.png", position: [1.9, 1.4, -0.4], baseSize: 1.15, drift: [-0.28, 0.2, 0] },
-  { id: "globe", url: "/images/object-03-globe.png", position: [-2.4, -0.3, -0.6], baseSize: 0.85, drift: [0.3, -0.24, 0] },
-  { id: "alien", url: "/images/object-04-alien.png", position: [2.3, -0.4, -1], baseSize: 0.95, drift: [-0.24, -0.28, 0] },
-  { id: "gummybears", url: "/images/object-05-gummybears.png", position: [0, -1.7, -0.3], baseSize: 1.1, drift: [0.2, 0.26, 0] },
-  { id: "graffiti", url: "/images/object-06-graffiti.png", position: [-0.6, 0.4, -1.3], baseSize: 1.2, drift: [-0.18, 0.22, 0] },
-  { id: "stopsign", url: "/images/object-07-stopsign.png", position: [0.9, -1.9, -0.7], baseSize: 0.95, drift: [0.26, -0.18, 0] },
-  { id: "tshirt", url: "/images/object-08-tshirt.png", position: [-2.6, 1.9, -1.2], baseSize: 1.3, drift: [0.24, 0.2, 0] },
+  { id: "logo", url: "/images/object-01-logo.png", position: [-1.3, 1.1, -0.9], baseSize: 0.55, drift: [0.16, 0.12, 0] },
+  { id: "madebynorth", url: "/images/object-02-madebynorth.png", position: [1.4, 1.0, -0.4], baseSize: 0.7, drift: [-0.2, 0.14, 0] },
+  { id: "globe", url: "/images/object-03-globe.png", position: [-1.7, -0.2, -0.6], baseSize: 0.5, drift: [0.2, -0.16, 0] },
+  { id: "alien", url: "/images/object-04-alien.png", position: [1.6, -0.3, -1], baseSize: 0.55, drift: [-0.16, -0.2, 0] },
+  { id: "gummybears", url: "/images/object-05-gummybears.png", position: [0, -1.2, -0.3], baseSize: 0.65, drift: [0.14, 0.18, 0] },
+  { id: "graffiti", url: "/images/object-06-graffiti.png", position: [-0.4, 0.3, -1.3], baseSize: 0.7, drift: [-0.12, 0.16, 0] },
+  { id: "stopsign", url: "/images/object-07-stopsign.png", position: [0.6, -1.3, -0.7], baseSize: 0.55, drift: [0.18, -0.12, 0] },
+  { id: "tshirt", url: "/images/object-08-tshirt.png", position: [-1.8, 1.3, -1.2], baseSize: 0.75, drift: [0.16, 0.14, 0] },
 ];
 
-const BOUNDS = { x: 3.4, y: 2.1 };
+const BOUNDS = { x: 2.2, y: 1.4 };
 const REPEL_RADIUS = 1.7;
 const REPEL_STRENGTH = 5.5;
 const IMPULSE_STRENGTH = 7;
@@ -163,7 +163,7 @@ function SceneContents() {
 
 export default function Scene() {
   return (
-    <div className="absolute inset-0 touch-none" style={{ background: "#f5f5f5" }}>
+    <div className="absolute inset-0 touch-none" style={{ background: "#e5e7eb" }}>
       <Canvas camera={{ position: [0, 0, 7], fov: 50 }} dpr={[1, 1.8]}>
         <Suspense fallback={null}>
           <SceneContents />
