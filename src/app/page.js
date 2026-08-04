@@ -4,6 +4,7 @@ import { useState } from "react";
 import Scene from "@/components/canvas/Scene";
 import CentralNav from "@/components/ui/CentralNav";
 import MenuOverlay from "@/components/ui/MenuOverlay";
+import ScrollProgress from "@/components/ui/ScrollProgress";
 import ProjectIndex from "@/components/sections/ProjectIndex";
 import StudioFooter from "@/components/sections/StudioFooter";
 
@@ -20,10 +21,6 @@ export default function HomePage() {
           <h1 className="text-4xl sm:text-6xl font-black uppercase tracking-tighter text-[#000000]">
             NorthDreamStudio
           </h1>
-          <p className="mt-3 max-w-sm text-sm text-[#000000]/60">
-            A creative technology studio building hyper-realistic virtual
-            identities and interactive digital ecosystems.
-          </p>
         </div>
       </section>
 
@@ -39,6 +36,7 @@ export default function HomePage() {
         isMenuOpen={isMenuOpen}
       />
       <MenuOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <ScrollProgress />
     </main>
   );
 }
