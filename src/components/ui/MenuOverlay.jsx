@@ -2,9 +2,17 @@
 
 import React, { useEffect } from "react";
 import { studioData } from "@/data/studio";
+import { projects } from "@/data/projects";
+
+const MENU_ITEMS = [
+  { label: "Selected Work", href: "/", badge: `${projects.length}`, badgeStyle: "bg-[#e2ff70] text-[#000000]" },
+  { label: "Collaborative Canvas", href: "/draw", badge: "LIVE", badgeStyle: "bg-[#ff00b7] text-[#ffffff]" },
+  { label: "Play", href: "/play", badge: "NEW", badgeStyle: "bg-[#000000] text-[#ffffff]" },
+  { label: "Studio Profile", href: "#about", badge: null },
+  { label: "Contact & Inquiries", href: "#contact", badge: null },
+];
 
 export default function MenuOverlay({ isOpen, onClose }) {
-  // Close on ESC key press
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") onClose();
@@ -13,102 +21,58 @@ export default function MenuOverlay({ isOpen, onClose }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-40 bg-[#000000] text-[#ffffff] flex flex-col justify-between p-6 sm:p-12 pb-28 sm:pb-32 overflow-y-auto animate-in fade-in duration-200">
-      {/* Top Header inside Overlay */}
-      <div className="flex justify-between items-center pb-6 border-b border-[#e5e7eb]/20">
-        <span className="text-xs font-mono tracking-wider opacity-60 uppercase">
-          {studioData.name} — Directory
-        </span>
-        
-        {/* ESC Hint Badge */}
-        <span className="text-[10px] font-mono opacity-40 uppercase hidden sm:inline-block">
-          Press [ESC] to exit
-        </span>
-      </div>
-
-      {/* Main Navigation Links */}
-      <div className="my-auto py-8">
-        <nav className="flex flex-col gap-6 text-3xl sm:text-6xl font-black uppercase tracking-tighter">
-          <a
-            href="#work"
-            onClick={onClose}
-            className="group flex items-center gap-4 text-[#ffffff] hover:text-[#e2ff70] transition-colors duration-150 w-fit"
-          >
-            <span className="text-xs font-mono text-[#ffffff]/40 group-hover:text-[#e2ff70]">
-              [01]
-            </span>
-            <span>Selected Work</span>
-          </a>
-
-          <a
-            href="/draw"
-            className="group flex items-center gap-4 text-[#ffffff] hover:text-[#e2ff70] transition-colors duration-150 w-fit"
-          >
-            <span className="text-xs font-mono text-[#ffffff]/40 group-hover:text-[#e2ff70]">
-              [02]
-            </span>
-            <span>Draw</span>
-          </a>
-
-          <a
-            href="#about"
-            onClick={onClose}
-            className="group flex items-center gap-4 text-[#ffffff] hover:text-[#e2ff70] transition-colors duration-150 w-fit"
-          >
-            <span className="text-xs font-mono text-[#ffffff]/40 group-hover:text-[#e2ff70]">
-              [03]
-            </span>
-            <span>Studio Bio</span>
-          </a>
-
-          <a
-            href="#contact"
-            onClick={onClose}
-            className="group flex items-center gap-4 text-[#ffffff] hover:text-[#e2ff70] transition-colors duration-150 w-fit"
-          >
-            <span className="text-xs font-mono text-[#ffffff]/40 group-hover:text-[#e2ff70]">
-              [04]
-            </span>
-            <span>Direct Inquiries</span>
-          </a>
-        </nav>
-      </div>
-
-      {/* Footer Info inside Menu */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-[#e5e7eb]/20 text-xs">
-        <div>
-          <p className="font-mono text-[#ffffff]/40 mb-1">Email Inquiry</p>
-          <a
-            href={`mailto:${studioData.email}`}
-            className="hover:text-[#e2ff70] transition-colors underline underline-offset-4"
-          >
-            {studioData.email}
-          </a>
+    <div
+      className={`fixed inset-x-4 bottom-24 z-40 flex justify-center transition-all duration-200 ${
+        isOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-3 pointer-events-none"
+      }`}
+    >
+      <div className="w-full max-w-sm bg-[#ffffff] border border-[#e5e7eb] rounded shadow-lg overflow-hidden">
+        {/* Menu items */}
+        <div className="divide-y divide-[#e5e7eb]">
+          {MENU_ITEMS.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              onClick={onClose}
+              className="flex items-center justify-between px-4 py-3.5 hover:bg-[#f4f4f4] transition-colors group"
+            >
+              <span className="text-sm font-bold text-[#000000] group-hover:text-[#000000]">
+                {item.label}
+              </span>
+              {item.badge && (
+                <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${item.badgeStyle}`}>
+                  {item.badge}
+                </span>
+              )}
+            </a>
+          ))}
         </div>
 
-        <div>
-          <p className="font-mono text-[#ffffff]/40 mb-1">Social Platforms</p>
-          <div className="flex gap-4">
-            <a
-              href={`https://instagram.com/${studioData.instagram}`}
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-[#e2ff70] transition-colors underline underline-offset-4"
-            >
-              Instagram
-            </a>
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-[#e2ff70] transition-colors underline underline-offset-4"
-            >
-              GitHub
-            </a>
-          </div>
+        {/* Footer info */}
+        <div className="border-t border-[#e5e7eb] bg-[#f4f4f4] px-4 py-3 flex items-center justify-between text-xs">
+          <a
+            href={`mailto:${studioData.email}`}
+            className="text-[#000000]/70 hover:text-[#000000] underline underline-offset-2"
+          >
+            Email
+          </a>
+          <a
+            href={`https://instagram.com/${studioData.instagram}`}
+            target="_blank"
+            rel="noreferrer"
+            className="text-[#000000]/70 hover:text-[#000000] underline underline-offset-2"
+          >
+            Instagram
+          </a>
+          <a
+            href="https://github.com"
+            target="_blank"
+            rel="noreferrer"
+            className="text-[#000000]/70 hover:text-[#000000] underline underline-offset-2"
+          >
+            GitHub
+          </a>
         </div>
       </div>
     </div>
