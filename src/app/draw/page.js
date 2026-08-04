@@ -1,7 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import DrawCanvas from "@/components/sections/DrawCanvas";
-import CentralNavLink from "@/components/ui/CentralNavLink";
+import CentralNav from "@/components/ui/CentralNav";
+import MenuOverlay from "@/components/ui/MenuOverlay";
 
 export default function DrawPage() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <main className="min-h-screen bg-[#e5e7eb] flex flex-col items-center justify-center px-6 py-24">
       <div className="text-center mb-10">
@@ -15,7 +21,11 @@ export default function DrawPage() {
 
       <DrawCanvas />
 
-      <CentralNavLink />
+      <CentralNav
+        toggleMenu={() => setIsMenuOpen((open) => !open)}
+        isMenuOpen={isMenuOpen}
+      />
+      <MenuOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </main>
   );
 }
