@@ -32,30 +32,14 @@ export default function ProjectIndex() {
   const [layout, setLayout] = useState("list");
 
   return (
-    <section className="w-full max-w-5xl mx-auto px-4 py-16">
+    <section id="work-top" className="w-full max-w-5xl mx-auto px-4 py-16">
       {/* WORK header */}
       <div className="flex justify-between items-center pb-4 border-b border-[#e5e7eb] text-xs text-[#000000]/60 uppercase tracking-wider">
         <span className="font-black tracking-tight text-sm text-[#000000]">Work</span>
         <span>{projects.length} Selected</span>
       </div>
 
-      {/* Layout toggle */}
-      <div className="flex justify-end gap-1 py-3">
-        {LAYOUTS.map(({ mode, icon }) => (
-          <button
-            key={mode}
-            onClick={() => setLayout(mode)}
-            aria-label={`${mode} view`}
-            className={`w-9 h-9 rounded-full text-sm flex items-center justify-center border transition-colors ${
-              layout === mode
-                ? "bg-[#e2ff70] border-[#e2ff70] text-[#000000]"
-                : "bg-[#f4f4f4] border-[#e5e7eb] text-[#000000]/60"
-            }`}
-          >
-            {icon}
-          </button>
-        ))}
-      </div>
+      {/* Layout toggle moved to bottom to match reference — see end of section */}
 
       {/* LIST */}
       {layout === "list" && (
@@ -125,6 +109,34 @@ export default function ProjectIndex() {
           ))}
         </div>
       )}
+
+      {/* Bottom control bar — matches reference: "Back to top" + segmented toggle */}
+      <div className="flex items-center justify-between mt-6 pt-4 border-t border-[#e5e7eb]">
+        <a
+          href="#work-top"
+          className="text-sm text-[#000000]/70 hover:text-[#000000] transition-colors"
+        >
+          Back to top
+        </a>
+        <div className="flex rounded overflow-hidden border border-[#e5e7eb]">
+          {LAYOUTS.map(({ mode, icon }, i) => (
+            <button
+              key={mode}
+              onClick={() => setLayout(mode)}
+              aria-label={`${mode} view`}
+              className={`w-10 h-10 flex items-center justify-center text-sm transition-colors ${
+                i > 0 ? "border-l border-[#e5e7eb]" : ""
+              } ${
+                layout === mode
+                  ? "bg-[#e2ff70] text-[#000000]"
+                  : "bg-[#f4f4f4] text-[#000000]/50"
+              }`}
+            >
+              {icon}
+            </button>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
