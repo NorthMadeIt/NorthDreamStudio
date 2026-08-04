@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { studioData } from "@/data/studio";
 import { projects } from "@/data/projects";
 
@@ -13,6 +13,8 @@ const MENU_ITEMS = [
 ];
 
 export default function MenuOverlay({ isOpen, onClose }) {
+  const [showFullBio, setShowFullBio] = useState(false);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") onClose();
@@ -27,7 +29,20 @@ export default function MenuOverlay({ isOpen, onClose }) {
         isOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-3 pointer-events-none"
       }`}
     >
-      <div className="w-full max-w-sm bg-[#ffffff] border border-[#e5e7eb] rounded shadow-lg overflow-hidden">
+      <div className="w-full max-w-sm bg-[#ffffff] border border-[#e5e7eb] rounded shadow-lg overflow-hidden max-h-[75vh] overflow-y-auto">
+        {/* Bio */}
+        <div className="px-4 pt-4 pb-3 border-b border-[#e5e7eb]">
+          <p className="text-base font-bold text-[#000000] leading-snug">
+            {showFullBio ? studioData.fullBio : studioData.shortBio}
+          </p>
+          <button
+            onClick={() => setShowFullBio((v) => !v)}
+            className="mt-1.5 text-xs text-[#000000]/50 hover:text-[#000000] transition-colors"
+          >
+            {showFullBio ? "Less info" : "More info"}
+          </button>
+        </div>
+
         {/* Menu items */}
         <div className="divide-y divide-[#e5e7eb]">
           {MENU_ITEMS.map((item) => (
